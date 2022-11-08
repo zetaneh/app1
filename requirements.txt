@@ -1,5 +1,4 @@
---upgrade pip
-streamlit == 1.14.0
-requests
-pandas
-gTTS
+gTTS==2.2.4
+pandas==1.4.4
+requests==2.28.1
+streamlit==1.14.0
