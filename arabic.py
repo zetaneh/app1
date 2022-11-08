@@ -69,7 +69,7 @@ def main():
     text = st.text_area("Text", text_d)
 
     text_hash = hashlib.md5(text.encode()).hexdigest()
-    path = f"audio/{text_hash}.mp3"
+    path = f"./audio/{text_hash}.mp3"
     if st.button("Speak"):
         #before run : verify if already the file exist
         if os.path.exists(path):
