@@ -1,5 +1,4 @@
 gTTS
-hashlib
 pandas
 requests
 streamlit
