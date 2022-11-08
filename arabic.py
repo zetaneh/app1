@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from gtts import gTTS
 import streamlit as st
+import hashlib
 
 st.set_page_config(page_title="Arabic Text To Speech", page_icon="🔊")
 hide_menu_style = """
@@ -57,15 +58,7 @@ class ArabicTextToSpeech:
         self.text2sp(text)
         self.convert_base64_to_mp3(self.response.text)
         
-        
-def get_ibn_arabi(n_page):
-    df = pd.read_csv('./book/ibn_arabi.csv')
-    # rename columns
-    df.columns = ['page_content']
-    row = df.page_content[n_page]
-    print(row)
-    #to string
-    return row
+
         
 def main():
     st.title("Arabic Text To Speech")
@@ -73,33 +66,33 @@ def main():
     
     text_d  = "ولد محيي الدين بن عربي في مدينة مرسية من أب عربي طائي وأم عربية خولانية ويعرف عند الصوفيين بالشيخ الأكبر والكبريت الأحمر. وهو واحد من كبار المتصوفة والفلاسفة المسلمين على مر العصور. كان أبوه علي بن محمد من أئمة الفقه والحديث، ومن أعلام الزهد والتقوى والتصوف. وكان جده أحد قضاة الأندلس وعلمائها، فنشأ ضمن جو ديني. انتقل والده إلى إشبيلية وكان يحكمها أنذاك السلطان محمد بن سعد، وكانت عاصمة من عواصم الحضارة والعلم في الأندلس. وما كاد لسانه يبين حتى دفع به والده إلى أبي بكر بن خلف عميد الفقهاء، فقرأ عليه القرآن الكريم بالقراءات السبع، فما أتم العاشرة من عمره حتى كان ملماً بالقراءات والمعاني والإشارات. ثم سلمه والده إلى طائفة من رجال الحديث والفقه تنتقل بين البلاد واستقر أخيراً في دمشق طوال حياته وكان واحداً من أعلامها حتى وفاته عام 1240 م"
     voice = st.selectbox("Select Voice", ["ar-SY-AmanyNeural", "ar-YE-SalehNeural","ar-MA-MounaNeural","ar-MA-JamalNeural","ar-SA-HamedNeural"])
-    chose_input_text_or_file = st.radio("Select Input", ["Text", "File"])
-    if chose_input_text_or_file == "Text":
-        text = st.text_area("Text", text_d)
-        page = None
-    else:
-        page = st.slider("Select Page", 1, 1000, 1)
-        text = get_ibn_arabi(page)
-        
+    text = st.text_area("Text", text_d)
+
+    text_hash = hashlib.md5(text.encode()).hexdigest()
+    path = f"audio/{text_hash}.mp3"
     if st.button("Speak"):
         #before run : verify if already the file exist
-        if os.path.exists(f'./output_{voice}_{page}.mp3'):
+        if os.path.exists(path):
             #then play it
             st.write("Already Exist : Playing...")
-            st.audio(f'./output_{voice}_{page}.mp3')
+            st.audio(path)
             
         else:
-            tts = ArabicTextToSpeech(f'./output_{voice}_{page}.mp3',voice)
+            tts = ArabicTextToSpeech(path,voice)
             tts.speak(text)
             st.write("Done : Playing...")
-            st.audio(f'./output_{voice}_{page}.mp3')
+            st.audio(path)
     if st.button("Speak with gTTs "):
-        st.write("Done : Playing...")
-        # more speed, accuracy, and quality
-        tts = gTTS(text, lang='ar', slow=False, lang_check=False, tld='com')
-        tts.save(f'./output_gTTS_{page}.mp3')
-        st.audio(f'./output_gTTS_{page}.mp3')
-        
+        if os.path.exists(path):
+            #then play it
+            st.write("Already Exist : Playing...")
+            st.audio(path)
+        else:
+            # more speed, accuracy, and quality
+            tts = gTTS(text, lang='ar', slow=False, lang_check=False, tld='com')
+            tts.save(path)
+            st.write("Done : Playing...")
+            
 
 if __name__ == "__main__":
     main()
