@@ -3,9 +3,8 @@ import base64
 import pandas as pd
 import os
 from gtts import gTTS
-
-# arabic reshaper
 import streamlit as st
+
 class ArabicTextToSpeech:
     def __init__(self,path_to_file="output.mp3",voice = "ar-SA-HamedNeural"):
         self.headers = {
@@ -73,22 +72,22 @@ def main():
         
     if st.button("Speak"):
         #before run : verify if already the file exist
-        if os.path.exists(f'./book/output_{voice}_{page}.mp3'):
+        if os.path.exists(f'./output_{voice}_{page}.mp3'):
             #then play it
             st.write("Already Exist : Playing...")
-            st.audio(f'./book/output_{voice}_{page}.mp3')
+            st.audio(f'./output_{voice}_{page}.mp3')
             
         else:
-            tts = ArabicTextToSpeech(f'./book/output_{voice}_{page}.mp3',voice)
+            tts = ArabicTextToSpeech(f'./output_{voice}_{page}.mp3',voice)
             tts.speak(text)
             st.write("Done : Playing...")
-            st.audio(f'./book/output_{voice}_{page}.mp3')
+            st.audio(f'./output_{voice}_{page}.mp3')
     if st.button("Speak with gTTs "):
         st.write("Done : Playing...")
         # more speed, accuracy, and quality
         tts = gTTS(text, lang='ar', slow=False, lang_check=False, tld='com')
-        tts.save(f'./book/output_gTTS_{page}.mp3')
-        st.audio(f'./book/output_gTTS_{page}.mp3')
+        tts.save(f'./output_gTTS_{page}.mp3')
+        st.audio(f'./output_gTTS_{page}.mp3')
         
 
 if __name__ == "__main__":
