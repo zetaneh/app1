@@ -69,8 +69,9 @@ def main():
     text = st.text_area("Text", text_d)
 
     text_hash = hashlib.md5(text.encode()).hexdigest()
-    path = f"./audio/{text_hash}.mp3"
-    if st.button("Speak"):
+    voice_hash = hashlib.md5(voice.encode()).hexdigest()
+    path = f"./audio/{text_hash}_{voice_hash}.mp3"
+    if st.button("Speak"): 
         #before run : verify if already the file exist
         if os.path.exists(path):
             #then play it
@@ -82,16 +83,16 @@ def main():
             tts.speak(text)
             st.write("Done : Playing...")
             st.audio(path)
-    if st.button("Speak with gTTs "):
-        if os.path.exists(path):
-            #then play it
-            st.write("Already Exist : Playing...")
-            st.audio(path)
-        else:
-            # more speed, accuracy, and quality
-            tts = gTTS(text, lang='ar', slow=False, lang_check=False, tld='com')
-            tts.save(path)
-            st.write("Done : Playing...")
+    #if st.button("Speak with gTTs "):
+    #    if os.path.exists(path):
+    #       #then play it
+    #        st.write("Already Exist : Playing...")
+    #        st.audio(path)
+    #    else:
+    #        # more speed, accuracy, and quality
+    #        tts = gTTS(text, lang='ar', slow=False, lang_check=False, tld='com')
+    #        tts.save(path)
+    #         st.write("Done : Playing...")
             
 
 if __name__ == "__main__":
