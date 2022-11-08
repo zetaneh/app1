@@ -5,6 +5,17 @@ import os
 from gtts import gTTS
 import streamlit as st
 
+st.set_page_config(page_title="Arabic Text To Speech", page_icon="🔊")
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
+
+
 class ArabicTextToSpeech:
     def __init__(self,path_to_file="output.mp3",voice = "ar-SA-HamedNeural"):
         self.headers = {
